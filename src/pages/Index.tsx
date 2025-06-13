@@ -30,7 +30,8 @@ const familyData = {
     {
       "name": "Kiriyaadath Kunjae Mutti Haji",
       "wife": "Thithikutty Hajjumma",
-      "children": ["Kutti Mon", "Cheriyaava", "Kunjan", "Ayisha Mol"]
+      "children": ["Kutti Mon", "Cheriyaava", "Kunjan", "Ayisha Mol"],
+      "relationship": "Sibling of Ahmed Kutty"
     },
     {
       "name": "Thottol Mammais Kutti",
@@ -43,7 +44,8 @@ const familyData = {
           "name": "Kachallama",
           "children": ["Sulayya", "Abu", "Nabeesu", "Basheer", "Musthu", "Ashraf"]
         }
-      ]
+      ],
+      "relationship": "Sibling of Ahmed Kutty"
     }
   ]
 };
@@ -70,21 +72,21 @@ const PersonCard: React.FC<PersonCardProps> = ({ name, relationship, searchTerm,
   };
 
   return (
-    <Card className="hover:shadow-md transition-all duration-200 border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50">
+    <Card className="hover:shadow-md transition-all duration-200 border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50">
       <CardContent className="p-4">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-200 to-orange-200 flex items-center justify-center border-2 border-amber-300">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 to-indigo-200 flex items-center justify-center border-2 border-blue-300">
             {hasImage ? (
               <img src="/placeholder.svg" alt={name} className="w-full h-full rounded-full object-cover" />
             ) : (
-              <User className="w-6 h-6 text-amber-700" />
+              <User className="w-6 h-6 text-blue-700" />
             )}
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-amber-900 text-sm">
+            <h3 className="font-semibold text-blue-900 text-sm">
               {highlightText(name, searchTerm)}
             </h3>
-            <p className="text-xs text-amber-700 opacity-80">{relationship}</p>
+            <p className="text-xs text-blue-700 opacity-80">{relationship}</p>
           </div>
         </div>
       </CardContent>
@@ -101,11 +103,11 @@ interface WifesSectionProps {
 
 const WivesSection: React.FC<WifesSectionProps> = ({ wives, searchTerm, isExpanded, onToggle }) => {
   return (
-    <div className="ml-8 border-l-2 border-amber-200 pl-6">
+    <div className="ml-8 border-l-2 border-blue-200 pl-6">
       <Button
         variant="ghost"
         onClick={onToggle}
-        className="mb-4 text-amber-800 hover:bg-amber-100 p-2"
+        className="mb-4 text-blue-800 hover:bg-blue-100 p-2"
       >
         {isExpanded ? <ChevronUp className="w-4 h-4 mr-2" /> : <ChevronDown className="w-4 h-4 mr-2" />}
         Wives & Children ({wives.reduce((total, wife) => total + (wife.children?.length || 0), 0)} children)
@@ -200,22 +202,22 @@ const Index = () => {
   }, [searchTerm, allNames]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-sky-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-amber-800 to-orange-800 text-white shadow-lg">
+      <div className="bg-gradient-to-r from-blue-800 to-indigo-800 text-white shadow-lg">
         <div className="container mx-auto px-6 py-8">
           <h1 className="text-4xl font-bold mb-2">Narimukkil Family</h1>
-          <p className="text-amber-100 text-lg">Discover our family heritage and connections</p>
+          <p className="text-blue-100 text-lg">Discover our family heritage and connections</p>
         </div>
       </div>
 
       <div className="container mx-auto px-6 py-8">
         {/* Search Section */}
-        <Card className="mb-8 border-amber-200 bg-white/80 backdrop-blur-sm">
+        <Card className="mb-8 border-blue-200 bg-white/80 backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center space-x-3">
-              <Search className="w-5 h-5 text-amber-700" />
-              <h2 className="text-xl font-semibold text-amber-900">Search Family Members</h2>
+              <Search className="w-5 h-5 text-blue-700" />
+              <h2 className="text-xl font-semibold text-blue-900">Search Family Members</h2>
             </div>
           </CardHeader>
           <CardContent>
@@ -224,18 +226,18 @@ const Index = () => {
               placeholder="Search by name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="border-amber-200 focus:border-amber-400 focus:ring-amber-200"
+              className="border-blue-200 focus:border-blue-400 focus:ring-blue-200"
             />
             
             {filteredResults && (
-              <div className="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <h3 className="font-semibold text-amber-900 mb-3">
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 className="font-semibold text-blue-900 mb-3">
                   Search Results ({filteredResults.length} found)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {filteredResults.map((name, index) => (
-                    <div key={index} className="p-2 bg-white rounded border border-amber-100">
-                      <span className="text-sm text-amber-800">
+                    <div key={index} className="p-2 bg-white rounded border border-blue-100">
+                      <span className="text-sm text-blue-800">
                         {name.split(new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')).map((part, i) => 
                           new RegExp(searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(part) ? (
                             <span key={i} className="bg-yellow-200 font-semibold">{part}</span>
@@ -251,14 +253,14 @@ const Index = () => {
         </Card>
 
         {/* Main Family Section */}
-        <Card className="mb-8 border-amber-200 bg-white/90 backdrop-blur-sm">
+        <Card className="mb-8 border-blue-200 bg-white/90 backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-amber-900">Ahmed Kutty's Family</h2>
+              <h2 className="text-2xl font-bold text-blue-900">Ahmed Kutty's Family</h2>
               <Button
                 variant="ghost"
                 onClick={() => toggleSection('mainFamily')}
-                className="text-amber-700 hover:bg-amber-100"
+                className="text-blue-700 hover:bg-blue-100"
               >
                 {expandedSections.mainFamily ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
               </Button>
@@ -285,14 +287,14 @@ const Index = () => {
         </Card>
 
         {/* Other Family Members Section */}
-        <Card className="border-amber-200 bg-white/90 backdrop-blur-sm">
+        <Card className="border-blue-200 bg-white/90 backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-amber-900">Other Family Members</h2>
+              <h2 className="text-2xl font-bold text-blue-900">Ahmed Kutty's Siblings</h2>
               <Button
                 variant="ghost"
                 onClick={() => toggleSection('otherMembers')}
-                className="text-amber-700 hover:bg-amber-100"
+                className="text-blue-700 hover:bg-blue-100"
               >
                 {expandedSections.otherMembers ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
               </Button>
@@ -305,11 +307,11 @@ const Index = () => {
                   <div key={index} className="space-y-4">
                     <PersonCard 
                       name={member.name} 
-                      relationship="Family Member" 
+                      relationship={member.relationship || "Family Member"} 
                       searchTerm={searchTerm}
                     />
                     
-                    <div className="ml-8 border-l-2 border-amber-200 pl-6 space-y-4">
+                    <div className="ml-8 border-l-2 border-blue-200 pl-6 space-y-4">
                       {/* Single wife */}
                       {member.wife && (
                         <PersonCard 
@@ -369,9 +371,9 @@ const Index = () => {
         </Card>
 
         {/* Future Generations Placeholder */}
-        <Card className="mt-8 border-dashed border-2 border-amber-300 bg-amber-50/50">
+        <Card className="mt-8 border-dashed border-2 border-blue-300 bg-blue-50/50">
           <CardContent className="p-8 text-center">
-            <div className="text-amber-600">
+            <div className="text-blue-600">
               <User className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <h3 className="text-lg font-semibold mb-2">Future Generations</h3>
               <p className="text-sm opacity-75">This section is ready for additional family members and generations</p>
