@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Search, ChevronDown, ChevronUp, User } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -6,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 const familyData = {
-  "grandfather": {
+  "main_family": {
     "name": "Ahmed Kutty (Narimukkukkil Ayi Mutti)",
     "wives": [
       {
@@ -27,7 +26,7 @@ const familyData = {
       }
     ]
   },
-  "siblings_of_grandfather": [
+  "other_family_members": [
     {
       "name": "Kiriyaadath Kunjae Mutti Haji",
       "wife": "Thithikutty Hajjumma",
@@ -145,8 +144,8 @@ const WivesSection: React.FC<WifesSectionProps> = ({ wives, searchTerm, isExpand
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedSections, setExpandedSections] = useState<{[key: string]: boolean}>({
-    grandfather: true,
-    siblings: true
+    mainFamily: true,
+    otherMembers: true
   });
 
   const toggleSection = (section: string) => {
@@ -159,33 +158,33 @@ const Index = () => {
   const allNames = useMemo(() => {
     const names: string[] = [];
     
-    // Add grandfather
-    names.push(familyData.grandfather.name);
+    // Add main family member
+    names.push(familyData.main_family.name);
     
-    // Add grandfather's wives and children
-    familyData.grandfather.wives.forEach(wife => {
+    // Add main family wives and children
+    familyData.main_family.wives.forEach(wife => {
       names.push(wife.name);
       if (wife.children) {
         names.push(...wife.children);
       }
     });
     
-    // Add siblings and their families
-    familyData.siblings_of_grandfather.forEach(sibling => {
-      names.push(sibling.name);
-      if (sibling.wife) {
-        names.push(sibling.wife);
+    // Add other family members and their families
+    familyData.other_family_members.forEach(member => {
+      names.push(member.name);
+      if (member.wife) {
+        names.push(member.wife);
       }
-      if (sibling.wives) {
-        sibling.wives.forEach((wife: any) => {
+      if (member.wives) {
+        member.wives.forEach((wife: any) => {
           names.push(wife.name);
           if (wife.children) {
             names.push(...wife.children);
           }
         });
       }
-      if (sibling.children) {
-        names.push(...sibling.children);
+      if (member.children) {
+        names.push(...member.children);
       }
     });
     
@@ -205,8 +204,8 @@ const Index = () => {
       {/* Header */}
       <div className="bg-gradient-to-r from-amber-800 to-orange-800 text-white shadow-lg">
         <div className="container mx-auto px-6 py-8">
-          <h1 className="text-4xl font-bold mb-2">Family Tree Explorer</h1>
-          <p className="text-amber-100 text-lg">Discover your roots and heritage</p>
+          <h1 className="text-4xl font-bold mb-2">Narimukkil Family</h1>
+          <p className="text-amber-100 text-lg">Discover our family heritage and connections</p>
         </div>
       </div>
 
@@ -251,79 +250,79 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* Grandfather Section */}
+        {/* Main Family Section */}
         <Card className="mb-8 border-amber-200 bg-white/90 backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-amber-900">Grandfather's Family</h2>
+              <h2 className="text-2xl font-bold text-amber-900">Ahmed Kutty's Family</h2>
               <Button
                 variant="ghost"
-                onClick={() => toggleSection('grandfather')}
+                onClick={() => toggleSection('mainFamily')}
                 className="text-amber-700 hover:bg-amber-100"
               >
-                {expandedSections.grandfather ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                {expandedSections.mainFamily ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
               <PersonCard 
-                name={familyData.grandfather.name} 
-                relationship="Grandfather" 
+                name={familyData.main_family.name} 
+                relationship="Family Head" 
                 searchTerm={searchTerm}
               />
               
-              {expandedSections.grandfather && (
+              {expandedSections.mainFamily && (
                 <WivesSection
-                  wives={familyData.grandfather.wives}
+                  wives={familyData.main_family.wives}
                   searchTerm={searchTerm}
-                  isExpanded={expandedSections.grandfatherWives || false}
-                  onToggle={() => toggleSection('grandfatherWives')}
+                  isExpanded={expandedSections.mainFamilyWives || false}
+                  onToggle={() => toggleSection('mainFamilyWives')}
                 />
               )}
             </div>
           </CardContent>
         </Card>
 
-        {/* Siblings Section */}
+        {/* Other Family Members Section */}
         <Card className="border-amber-200 bg-white/90 backdrop-blur-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-amber-900">Grandfather's Siblings</h2>
+              <h2 className="text-2xl font-bold text-amber-900">Other Family Members</h2>
               <Button
                 variant="ghost"
-                onClick={() => toggleSection('siblings')}
+                onClick={() => toggleSection('otherMembers')}
                 className="text-amber-700 hover:bg-amber-100"
               >
-                {expandedSections.siblings ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                {expandedSections.otherMembers ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
               </Button>
             </div>
           </CardHeader>
           <CardContent>
-            {expandedSections.siblings && (
+            {expandedSections.otherMembers && (
               <div className="space-y-8 animate-fade-in">
-                {familyData.siblings_of_grandfather.map((sibling, index) => (
+                {familyData.other_family_members.map((member, index) => (
                   <div key={index} className="space-y-4">
                     <PersonCard 
-                      name={sibling.name} 
-                      relationship="Grandfather's Sibling" 
+                      name={member.name} 
+                      relationship="Family Member" 
                       searchTerm={searchTerm}
                     />
                     
                     <div className="ml-8 border-l-2 border-amber-200 pl-6 space-y-4">
                       {/* Single wife */}
-                      {sibling.wife && (
+                      {member.wife && (
                         <PersonCard 
-                          name={sibling.wife} 
+                          name={member.wife} 
                           relationship="Wife" 
                           searchTerm={searchTerm}
                         />
                       )}
                       
                       {/* Multiple wives */}
-                      {sibling.wives && (
+                      {member.wives && (
                         <div className="space-y-4">
-                          {sibling.wives.map((wife: any, wifeIndex: number) => (
+                          {member.wives.map((wife: any, wifeIndex: number) => (
                             <div key={wifeIndex} className="space-y-3">
                               <PersonCard 
                                 name={wife.name} 
@@ -349,9 +348,9 @@ const Index = () => {
                       )}
                       
                       {/* Direct children (for single wife cases) */}
-                      {sibling.children && !sibling.wives && (
+                      {member.children && !member.wives && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {sibling.children.map((child: string, childIndex: number) => (
+                          {member.children.map((child: string, childIndex: number) => (
                             <PersonCard 
                               key={childIndex}
                               name={child} 
