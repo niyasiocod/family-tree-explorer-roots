@@ -30,7 +30,7 @@ const familyData = {
     {
       "name": "Kiriyaadath Kunjae Mutti Haji",
       "wife": "Thithikutty Hajjumma",
-      "children": ["Kutti Mon", "Cheriyaava", "Kunjan", "Ayisha Mol"],
+      "children": ["Kutti Mon", "Cheriyaaka", "Abu", "Malu", "Kunjan", "Ayisha Mol"],
       "relationship": "Sibling of Ahmed Kutty"
     },
     {
