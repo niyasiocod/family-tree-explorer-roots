@@ -3,6 +3,7 @@ import { Search, ChevronDown, ChevronUp, User } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const familyData = {
   "main_family": {
@@ -102,6 +103,15 @@ interface WifesSectionProps {
 }
 
 const WivesSection: React.FC<WifesSectionProps> = ({ wives, searchTerm, isExpanded, onToggle }) => {
+  const [openWifeIndexes, setOpenWifeIndexes] = useState<{[key:number]: boolean}>({});
+
+  const toggleWifeSection = (index: number) => {
+    setOpenWifeIndexes(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
   return (
     <div className="ml-8 border-l-2 border-blue-200 pl-6">
       <Button
@@ -110,9 +120,8 @@ const WivesSection: React.FC<WifesSectionProps> = ({ wives, searchTerm, isExpand
         className="mb-4 text-blue-800 hover:bg-blue-100 p-2"
       >
         {isExpanded ? <ChevronUp className="w-4 h-4 mr-2" /> : <ChevronDown className="w-4 h-4 mr-2" />}
-        Wives & Children ({wives.reduce((total, wife) => total + (wife.children?.length || 0), 0)} children)
+        Wives ({wives.length})
       </Button>
-      
       {isExpanded && (
         <div className="space-y-6 animate-fade-in">
           {wives.map((wife, wifeIndex) => (
@@ -122,19 +131,34 @@ const WivesSection: React.FC<WifesSectionProps> = ({ wives, searchTerm, isExpand
                 relationship="Wife" 
                 searchTerm={searchTerm}
               />
-              
-              {wife.children && wife.children.length > 0 && (
-                <div className="ml-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {wife.children.map((child: string, childIndex: number) => (
-                    <PersonCard 
-                      key={childIndex}
-                      name={child} 
-                      relationship="Child" 
-                      searchTerm={searchTerm}
-                    />
-                  ))}
-                </div>
-              )}
+              <Collapsible open={!!openWifeIndexes[wifeIndex]} onOpenChange={() => toggleWifeSection(wifeIndex)}>
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mb-2 text-blue-700"
+                  >
+                    {openWifeIndexes[wifeIndex] ? <ChevronUp className="inline w-4 h-4 mr-1" /> : <ChevronDown className="inline w-4 h-4 mr-1" />}
+                    {openWifeIndexes[wifeIndex] ? 'Hide Children' : 'Show Children'}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  {wife.children && wife.children.length > 0 ? (
+                    <div className="ml-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 animate-fade-in">
+                      {wife.children.map((child: string, childIndex: number) => (
+                        <PersonCard 
+                          key={childIndex}
+                          name={child} 
+                          relationship="Child" 
+                          searchTerm={searchTerm}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="ml-6 text-blue-500 text-sm">No children listed.</div>
+                  )}
+                </CollapsibleContent>
+              </Collapsible>
             </div>
           ))}
         </div>
@@ -314,11 +338,34 @@ const Index = () => {
                     <div className="ml-8 border-l-2 border-blue-200 pl-6 space-y-4">
                       {/* Single wife */}
                       {member.wife && (
-                        <PersonCard 
-                          name={member.wife} 
-                          relationship="Wife" 
-                          searchTerm={searchTerm}
-                        />
+                        <div className="space-y-2">
+                          <PersonCard 
+                            name={member.wife} 
+                            relationship="Wife" 
+                            searchTerm={searchTerm}
+                          />
+                          {member.children && !member.wives && (
+                            <Collapsible>
+                              <CollapsibleTrigger asChild>
+                                <Button variant="outline" size="sm" className="mb-2 text-blue-700">
+                                  <ChevronDown className="inline w-4 h-4 mr-1" /> Show Children
+                                </Button>
+                              </CollapsibleTrigger>
+                              <CollapsibleContent>
+                                <div className="ml-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 animate-fade-in">
+                                  {member.children.map((child: string, childIndex: number) => (
+                                    <PersonCard 
+                                      key={childIndex}
+                                      name={child} 
+                                      relationship="Child" 
+                                      searchTerm={searchTerm}
+                                    />
+                                  ))}
+                                </div>
+                              </CollapsibleContent>
+                            </Collapsible>
+                          )}
+                        </div>
                       )}
                       
                       {/* Multiple wives */}
@@ -331,34 +378,30 @@ const Index = () => {
                                 relationship="Wife" 
                                 searchTerm={searchTerm}
                               />
-                              
-                              {wife.children && wife.children.length > 0 && (
-                                <div className="ml-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                  {wife.children.map((child: string, childIndex: number) => (
-                                    <PersonCard 
-                                      key={childIndex}
-                                      name={child} 
-                                      relationship="Child" 
-                                      searchTerm={searchTerm}
-                                    />
-                                  ))}
-                                </div>
-                              )}
+                              <Collapsible>
+                                <CollapsibleTrigger asChild>
+                                  <Button variant="outline" size="sm" className="mb-2 text-blue-700">
+                                    <ChevronDown className="inline w-4 h-4 mr-1" /> Show Children
+                                  </Button>
+                                </CollapsibleTrigger>
+                                <CollapsibleContent>
+                                  {wife.children && wife.children.length > 0 ? (
+                                    <div className="ml-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 animate-fade-in">
+                                      {wife.children.map((child: string, childIndex: number) => (
+                                        <PersonCard 
+                                          key={childIndex}
+                                          name={child} 
+                                          relationship="Child" 
+                                          searchTerm={searchTerm}
+                                        />
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <div className="ml-6 text-blue-500 text-sm">No children listed.</div>
+                                  )}
+                                </CollapsibleContent>
+                              </Collapsible>
                             </div>
-                          ))}
-                        </div>
-                      )}
-                      
-                      {/* Direct children (for single wife cases) */}
-                      {member.children && !member.wives && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {member.children.map((child: string, childIndex: number) => (
-                            <PersonCard 
-                              key={childIndex}
-                              name={child} 
-                              relationship="Child" 
-                              searchTerm={searchTerm}
-                            />
                           ))}
                         </div>
                       )}
